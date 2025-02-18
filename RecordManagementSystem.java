@@ -94,32 +94,34 @@ public class RecordManagementSystem {
 
             switch (choice) {
                 case 1: // Add student
-                    System.out.print("Enter Name: ");
+                    System.out.println("Enter Name: ");
                     String name = input.nextLine();
 
-                    System.out.print("Enter ID: ");
+                    System.out.println("Enter ID: ");
                     int ID = getIntInput(input);
 
-                    System.out.print("Enter Age: ");
+                    System.out.println("Enter Age: ");
                     int age = getIntInput(input);
 
-                    System.out.print("Enter Grade: ");
+                    System.out.println("Enter Grade: ");
                     float grade = getFloatInput(input);
 
                     StudentManagement.addStudent(name, ID, age, grade);
                     break;
 
                 case 2: // Update student
-                    System.out.print("Enter Student ID to update: ");
+                    System.out.println("Enter Student ID to update: ");
                     int updateID = getIntInput(input);
+                    input.nextLine();
 
-                    System.out.print("Enter New Name: ");
+                    System.out.println("Enter New Name: ");
                     String newName = input.nextLine();
 
-                    System.out.print("Enter New Age: ");
+                    System.out.println("Enter New Age: ");
                     int newAge = getIntInput(input);
+                    input.nextLine();
 
-                    System.out.print("Enter New Grade: ");
+                    System.out.println("Enter New Grade: ");
                     float newGrade = getFloatInput(input);
 
                     StudentManagement.updateStudent(updateID, newName, newAge, newGrade);
