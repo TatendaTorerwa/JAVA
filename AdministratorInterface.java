@@ -1,16 +1,20 @@
-import java.util.Scanner;
+import java.util.Scanner;  // Import the Scanner class
 
+
+// The `Student` class represents a student, containing attributes like name, ID, enrolled course, and grade.
 class Student {
-    private String name;
-    private int id;
-    private Course enrolledCourse;
-    private double grade;
+    private String name;  // The name of the student
+    private int id;  // The unique ID of the student
+    private Course enrolledCourse;  // The course the student is enrolled in
+    private double grade;  // The grade of the student in the enrolled course
 
+    // Constructor to initialize a new student object
     public Student(String name, int id) {
         this.name = name;
         this.id = id;
     }
 
+    // Getter and Setter methods for student attributes
     public String getName() {
         return name;
     }
@@ -27,25 +31,29 @@ class Student {
         this.id = id;
     }
 
+    // Getter method to retrieve the enrolled course of the student
     public Course getEnrolledCourse() {
         return enrolledCourse;
     }
 
+    // Getter method to retrieve the grade of the student
     public double getGrade() {
         return grade;
     }
 
+    // Method to enroll the student in a given course
     public void enrollInCourse(Course course) {
         if (course.enrollStudent()) {
-            this.enrolledCourse = course;
+            this.enrolledCourse = course;  // Assign the course to the student
             System.out.println(name + " has been enrolled in " + course.getCourseName());
         } else {
             System.out.println("Enrollment failed. Course is full.");
         }
     }
 
+    // Method to assign a grade to a student in a particular course
     public void assignGrade(Course course, double grade) {
-        if (this.enrolledCourse == course) {
+        if (this.enrolledCourse == course) {  // Check if the student is enrolled in the course
             this.grade = grade;
             System.out.println("Grade assigned: " + grade + " for course " + course.getCourseName());
         } else {
@@ -54,19 +62,20 @@ class Student {
     }
 }
 
-
+// The `Course` class represents a course with attributes like course code, course name, and enrollment details.
 class Course {
-    private String courseCode;
-    private String courseName;
-    private int maxCapacity;
-    private int enrolledStudents;
-    private static int totalEnrolledStudents = 0;
+    private String courseCode;  // The unique code for the course
+    private String courseName;  // The name of the course
+    private int maxCapacity;  // The maximum number of students that can enroll in the course
+    private int enrolledStudents;  // The number of students currently enrolled in the course
+    private static int totalEnrolledStudents = 0;  // Static variable to track total number of students enrolled in all courses
 
+    // Constructor to initialize a new course
     public Course(String courseCode, String courseName, int maxCapacity) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.maxCapacity = maxCapacity;
-        this.enrolledStudents = 0;
+        this.enrolledStudents = 0;  // Initial number of enrolled students is zero
     }
 
     // Public getter methods for accessing course information
@@ -86,14 +95,14 @@ class Course {
         return enrolledStudents;
     }
 
-    // Method to enroll a student in the course
+    // Method to enroll a student in the course if the course has available slots
     public boolean enrollStudent() {
         if (enrolledStudents < maxCapacity) {
-            enrolledStudents++;
-            totalEnrolledStudents++;
+            enrolledStudents++;  // Increment the number of enrolled students
+            totalEnrolledStudents++;  // Increment the static variable tracking total enrolled students
             return true;
         }
-        return false;
+        return false;  // Return false if the course is full
     }
 
     // Static method to get the total number of enrolled students across all courses
@@ -102,19 +111,17 @@ class Course {
     }
 }
 
-
-
+// The `CourseManagement` class handles the management of courses, students, and grade assignments.
 class CourseManagement {
-    // Using simple arrays to store courses and student grades
-    private static Course[] courses = new Course[10]; // Array to store courses
-    private static int courseCount = 0; // Counter to keep track of courses added
+    private static Course[] courses = new Course[10];  // Array to store courses (maximum 10 courses)
+    private static int courseCount = 0;  // Counter to track the number of courses added
 
-    // Method to add a new course
+    // Method to add a new course to the system
     public static void addCourse(String courseCode, String courseName, int maxCapacity) {
         if (courseCount < courses.length) {
             Course course = new Course(courseCode, courseName, maxCapacity);
-            courses[courseCount] = course;
-            courseCount++;
+            courses[courseCount] = course;  // Add the new course to the array
+            courseCount++;  // Increment the course count
             System.out.println("Course added: " + courseName);
         } else {
             System.out.println("Cannot add more courses, array is full.");
@@ -126,43 +133,44 @@ class CourseManagement {
         student.enrollInCourse(course);
     }
 
-    // Method to assign a grade to a student for a course
+    // Method to assign a grade to a student for a particular course
     public static void assignGrade(Student student, Course course, double grade) {
         student.assignGrade(course, grade);
     }
 
-    // Method to calculate overall grade for a student based on assigned grades
+    // Method to calculate the overall grade for a student
     public static double calculateOverallGrade(Student student) {
         if (student.getEnrolledCourse() == null) {
             System.out.println(student.getName() + " is not enrolled in any course.");
-            return 0.0;
+            return 0.0;  // Return 0 if the student is not enrolled in any course
         }
 
-        double grade = student.getGrade();
+        double grade = student.getGrade();  // Get the grade of the student in the enrolled course
         System.out.println("Overall grade for " + student.getName() + ": " + grade);
         return grade;
     }
 
-    // Method to get a course by its name (to use when enrolling or assigning grades)
+    // Method to get a course by its name
     public static Course getCourseByName(String courseName) {
         for (int i = 0; i < courseCount; i++) {
             if (courses[i].getCourseName().equals(courseName)) {
-                return courses[i];
+                return courses[i];  // Return the course if found
             }
         }
-        return null;
+        return null;  // Return null if no course with the given name is found
     }
 }
 
-
+// The `AdministratorInterface` class is the user interface for an administrator to manage courses and students.
 class AdministratorInterface {
-    private static Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);  // Scanner to read user input
 
     public static void main(String[] args) {
         while (true) {
-            displayMenu();
-            int choice = getUserChoice();
+            displayMenu();  // Display the menu to the administrator
+            int choice = getUserChoice();  // Get the administrator's choice
 
+            // Switch-case to perform actions based on the user's choice
             switch (choice) {
                 case 1:
                     addCourse();
@@ -178,15 +186,15 @@ class AdministratorInterface {
                     break;
                 case 5:
                     System.out.println("Exiting system.");
-                    scanner.close();
-                    return; // Exit the program
+                    scanner.close();  // Close the scanner before exiting
+                    return;  // Exit the program
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
             }
         }
     }
 
-    // Display the menu for the administrator
+    // Method to display the menu options to the administrator
     private static void displayMenu() {
         System.out.println("\n==== Course Management System ====");
         System.out.println("1. Add New Course");
@@ -197,18 +205,18 @@ class AdministratorInterface {
         System.out.print("Enter your choice: ");
     }
 
-    // Get the choice of the administrator from the menu
+    // Method to get the administrator's menu choice
     private static int getUserChoice() {
         int choice = 0;
         try {
-            choice = Integer.parseInt(scanner.nextLine());
+            choice = Integer.parseInt(scanner.nextLine());  // Read and parse the choice
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a number.");
         }
         return choice;
     }
 
-    // Add a new course to the system
+    // Method to add a new course to the system
     private static void addCourse() {
         System.out.print("Enter course code: ");
         String courseCode = scanner.nextLine();
@@ -220,7 +228,7 @@ class AdministratorInterface {
         CourseManagement.addCourse(courseCode, courseName, maxCapacity);
     }
 
-    // Enroll a student in a course
+    // Method to enroll a student in a course
     private static void enrollStudent() {
         System.out.print("Enter student name: ");
         String studentName = scanner.nextLine();
@@ -240,7 +248,7 @@ class AdministratorInterface {
         }
     }
 
-    // Assign a grade to a student
+    // Method to assign a grade to a student
     private static void assignGrade() {
         System.out.print("Enter student name: ");
         String studentName = scanner.nextLine();
@@ -262,7 +270,7 @@ class AdministratorInterface {
         }
     }
 
-    // Calculate the overall grade for a student
+    // Method to calculate the overall grade for a student
     private static void calculateOverallGrade() {
         System.out.print("Enter student name: ");
         String studentName = scanner.nextLine();
