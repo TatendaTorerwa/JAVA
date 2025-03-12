@@ -1,51 +1,53 @@
 import java.util.Scanner; // Import Scanner for user input
+import java.util.InputMismatchException; // Add this import for InputMismatchException
+
 
 // Interface for all vehicles
 public interface Vehicle {
     String make(); // Returns the make of the vehicle
-    String model(); // Retuirn the model of the vehicle
-    String yearOfManufacture(); // Returns the year of manufacture
+    String model(); // Returns the model of the vehicle
+    int yearOfManufacture(); // Returns the year of manufacture
 }
 
-// Interface for Cars
-public interface CarVehicles {
-    void setDoors(int doors); // sets the number of doors
-    int retrieveNumDoors(); // gets the number of doors
-    void setFuelType(String FuelType); // sets the fuel type
-    String getFuelType(); // retrieves the fuel type
+// Interface specific to Cars
+public interface CarVehicle {
+    void setDoors(int doors); // Sets the number of doors
+    int retrieveNumDoors(); // Retrieves the number of doors
+    void setFuelType(String fuelType); // Sets the fuel type
+    String getFuelType(); // Retrieves the fuel type
 }
 
-// Interface for Motorcycles
+// Interface specific to Motorcycles
 public interface MotorVehicle {
-    void setWheels(int wheels); // sets the number of wheels
-    int retrieveNumWheels(); // gets the number of wheels
-    void setMotorcycleType(String type); // sets the motorcycle type
-    String getMotorcycleType(); // retrieves the motorcycle type
+    void setWheels(int wheels); // Sets the number of wheels
+    int retrieveNumWheels(); // Retrieves the number of wheels
+    void setMotorcycleType(String type); // Sets the motorcycle type
+    String getMotorcycleType(); // Retrieves the motorcycle type
 }
 
-// Interface for Trucks
-public interface TruckVehicles {
-    void setCargoCapacity(float capacity); // sets the cargo capacity
+// Interface specific to Trucks
+public interface TruckVehicle {
+    void setCargoCapacity(float capacity); // Sets the cargo capacity
     float retrieveCargoCapacity(); // Retrieves the cargo capacity
-    void setTransmissionType(String type); // sets the transmission type
-    String getTransmissionType(); // retrieves the transmission type
+    void setTransmissionType(String type); // Sets the transmission type
+    String getTransmissionType(); // Retrieves the transmission type
 }
 
-// Car class implementing the Vehicle and CarVehicle interface
+// Car Class implementing Vehicle and CarVehicle interfaces
 class Car implements Vehicle, CarVehicle {
 
     // Private attributes for encapsulation
     private String make, model, fuelType;
     private int doors, year;
 
-    // Conctructor to initialize the Car attributes
+    // Constructor to initialize Car attributes
     public Car(String make, String model, int year) {
         this.make = make;
         this.model = model;
         this.year = year;
     }
 
-    // Implementing the Vehicle interface methods
+    // Implementing Vehicle interface methods
     @Override
     public String make() {
         return make;
@@ -77,14 +79,13 @@ class Car implements Vehicle, CarVehicle {
         this.fuelType = fuelType;
     }
 
-    @Overrride
+    @Override
     public String getFuelType() {
         return fuelType;
     }
 }
 
-
-// Motorcycle class implementing Vehicle and MotorVehicle interfaces
+// Motorcycle Class implementing Vehicle and MotorVehicle interfaces
 class Motorcycle implements Vehicle, MotorVehicle {
 
     // Private attributes for encapsulation
@@ -92,7 +93,7 @@ class Motorcycle implements Vehicle, MotorVehicle {
     private int wheels, year;
 
     // Constructor to initialize Motorcycle attributes
-    public Motorcycle(String make, String models, int year) {
+    public Motorcycle(String make, String model, int year) {
         this.make = make;
         this.model = model;
         this.year = year;
@@ -101,7 +102,7 @@ class Motorcycle implements Vehicle, MotorVehicle {
     // Implementing Vehicle interface methods
     @Override
     public String make() {
-        return  make;
+        return make;
     }
 
     @Override
@@ -109,6 +110,7 @@ class Motorcycle implements Vehicle, MotorVehicle {
         return model;
     }
 
+    @Override
     public int yearOfManufacture() {
         return year;
     }
@@ -126,7 +128,7 @@ class Motorcycle implements Vehicle, MotorVehicle {
 
     @Override
     public void setMotorcycleType(String type) {
-        this.motocycleType = type;
+        this.motorcycleType = type;
     }
 
     @Override
@@ -214,7 +216,7 @@ public class Main {
             System.out.println("Enter transmission type:");
             truck.setTransmissionType(scanner.next());
 
-            // Display Vihivle details
+            // Display Vehicle Details
             System.out.println("\nCar Details: " + car.make() + " " + car.model() + " (" + car.yearOfManufacture() + ") | Doors: " + car.retrieveNumDoors() + " | Fuel: " + car.getFuelType());
             System.out.println("Motorcycle Details: " + motorcycle.make() + " " + motorcycle.model() + " (" + motorcycle.yearOfManufacture() + ") | Wheels: " + motorcycle.retrieveNumWheels() + " | Type: " + motorcycle.getMotorcycleType());
             System.out.println("Truck Details: " + truck.make() + " " + truck.model() + " (" + truck.yearOfManufacture() + ") | Cargo: " + truck.retrieveCargoCapacity() + " tons | Transmission: " + truck.getTransmissionType());
