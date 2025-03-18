@@ -1,4 +1,4 @@
-iimport javafx.application.Application;
+import javafx.application.Application;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -82,9 +82,17 @@ public class StudentManagementSystem extends Application {
         dialog.setResultConverter(button -> {
             if (button == addButton) {
                 String name = nameField.getText();
-                int age = Integer.parseInt(ageField.getText());
-                studentList.add(new Student(name, age));
-                showSuccess("Student added successfully.");
+                try {
+                    int age = Integer.parseInt(ageField.getText());
+                    if (!name.isEmpty() && age > 0) {
+                        studentList.add(new Student(name, age));
+                        showSuccess("Student added successfully.");
+                    } else {
+                        showError("Invalid input. Please provide valid name and age.");
+                    }
+                } catch (NumberFormatException ex) {
+                    showError("Invalid age. Please enter a valid number.");
+                }
             }
             return null;
         });
@@ -129,8 +137,17 @@ public class StudentManagementSystem extends Application {
                 Student selected = studentComboBox.getValue();
                 if (selected != null) {
                     selected.setName(nameField.getText());
-                    selected.setAge(Integer.parseInt(ageField.getText()));
-                    showSuccess("Student updated successfully.");
+                    try {
+                        int age = Integer.parseInt(ageField.getText());
+                        if (age > 0) {
+                            selected.setAge(age);
+                            showSuccess("Student updated successfully.");
+                        } else {
+                            showError("Age must be a positive number.");
+                        }
+                    } catch (NumberFormatException ex) {
+                        showError("Invalid age. Please enter a valid number.");
+                    }
                 }
             }
             return null;
@@ -177,6 +194,8 @@ public class StudentManagementSystem extends Application {
         dialog.setResultConverter(button -> {
             if (button == enrollButton && studentComboBox.getValue() != null && courseComboBox.getValue() != null) {
                 showSuccess(studentComboBox.getValue().getName() + " enrolled in " + courseComboBox.getValue());
+            } else {
+                showError("Please select a student and a course.");
             }
             return null;
         });
@@ -203,6 +222,8 @@ public class StudentManagementSystem extends Application {
         dialog.setResultConverter(button -> {
             if (button == assignButton && studentComboBox.getValue() != null && courseComboBox.getValue() != null && !gradeField.getText().isEmpty()) {
                 showSuccess("Assigned grade " + gradeField.getText());
+            } else {
+                showError("Please fill all fields.");
             }
             return null;
         });
@@ -214,6 +235,13 @@ public class StudentManagementSystem extends Application {
     private void showSuccess(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
         alert.setContentText(message);
         alert.showAndWait();
     }
