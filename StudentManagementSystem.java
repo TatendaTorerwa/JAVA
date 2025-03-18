@@ -82,17 +82,9 @@ public class StudentManagementSystem extends Application {
         dialog.setResultConverter(button -> {
             if (button == addButton) {
                 String name = nameField.getText();
-                try {
-                    int age = Integer.parseInt(ageField.getText());
-                    if (!name.isEmpty() && age > 0) {
-                        studentList.add(new Student(name, age));
-                        showSuccess("Student added successfully.");
-                    } else {
-                        showError("Invalid input. Please provide valid name and age.");
-                    }
-                } catch (NumberFormatException ex) {
-                    showError("Invalid age. Please enter a valid number.");
-                }
+                int age = Integer.parseInt(ageField.getText());
+                studentList.add(new Student(name, age));
+                showSuccess("Student added successfully.");
             }
             return null;
         });
@@ -137,17 +129,8 @@ public class StudentManagementSystem extends Application {
                 Student selected = studentComboBox.getValue();
                 if (selected != null) {
                     selected.setName(nameField.getText());
-                    try {
-                        int age = Integer.parseInt(ageField.getText());
-                        if (age > 0) {
-                            selected.setAge(age);
-                            showSuccess("Student updated successfully.");
-                        } else {
-                            showError("Age must be a positive number.");
-                        }
-                    } catch (NumberFormatException ex) {
-                        showError("Invalid age. Please enter a valid number.");
-                    }
+                    selected.setAge(Integer.parseInt(ageField.getText()));
+                    showSuccess("Student updated successfully.");
                 }
             }
             return null;
@@ -169,7 +152,9 @@ public class StudentManagementSystem extends Application {
         TableColumn<Student, Integer> ageColumn = new TableColumn<>("Age");
         ageColumn.setCellValueFactory(data -> data.getValue().ageProperty().asObject());
 
-        studentTable.getColumns().addAll(nameColumn, ageColumn);
+        // Add columns one by one to avoid the varargs warning
+        studentTable.getColumns().add(nameColumn);
+        studentTable.getColumns().add(ageColumn);
 
         dialog.getDialogPane().setContent(studentTable);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
@@ -194,8 +179,6 @@ public class StudentManagementSystem extends Application {
         dialog.setResultConverter(button -> {
             if (button == enrollButton && studentComboBox.getValue() != null && courseComboBox.getValue() != null) {
                 showSuccess(studentComboBox.getValue().getName() + " enrolled in " + courseComboBox.getValue());
-            } else {
-                showError("Please select a student and a course.");
             }
             return null;
         });
@@ -222,8 +205,6 @@ public class StudentManagementSystem extends Application {
         dialog.setResultConverter(button -> {
             if (button == assignButton && studentComboBox.getValue() != null && courseComboBox.getValue() != null && !gradeField.getText().isEmpty()) {
                 showSuccess("Assigned grade " + gradeField.getText());
-            } else {
-                showError("Please fill all fields.");
             }
             return null;
         });
@@ -235,13 +216,6 @@ public class StudentManagementSystem extends Application {
     private void showSuccess(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Success");
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
         alert.setContentText(message);
         alert.showAndWait();
     }
