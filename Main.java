@@ -20,107 +20,116 @@ public class Main {
      *
      * @param args command-line arguments (not used).
      */
-    public static void main(String[] args) {
 
-        Scanner inputText = new Scanner(System.in);
+      public static void main(String[] args) {
+        try {
+            Scanner inputText = new Scanner(System.in);
+            System.out.println("Enter a paragraph or length text:");
+            String text = inputText.nextLine();
 
-        // Prompt user for a block of text
-        System.out.println("Enter a paragraph or lengthy text:");
-        String text = inputText.nextLine();
+            // Character Count
+            int totalCharacters = text.length();
+            System.out.println("The total characters are: " + totalCharacters);
 
-        // Calculate total characters in the text (including spaces and punctuation)
-        int totalCharacters = text.length();
-        System.out.println("Total number of characters: " + totalCharacters);
+            // Word Count
+            int totalWords = text.trim().split("\\s+").length;
+            System.out.println("The total words are: " + totalWords);
 
-        // Split input into words using whitespace as separator
-        String[] words = text.trim().split("\\s+");
-        int totalWords = words.length;
-        System.out.println("Total number of words: " + totalWords);
-
-        // Convert input to lowercase and convert to character array for easier analysis
-        char[] textChars = text.toLowerCase().toCharArray();
-
-        // Variables to store the most common character and its occurrence count
-        int maxCount = 0;
-        char mostCommonChar = ' ';
-
-        // Loop through each character to determine the most frequent alphanumeric character
-        for (int i = 0; i < textChars.length; i++) {
-            char currentChar = textChars[i];
-
-            if (!Character.isLetterOrDigit(currentChar)) {
-                continue; // Ignore non-alphanumeric characters
-            }
-
+            // Most Common Character
+            char characterOccur = text.charAt(0);
             int count = 0;
-
-            // Count occurrences of the current character
-            for (int j = 0; j < textChars.length; j++) {
-                if (textChars[j] == currentChar) {
+            for (int i = 0; i < totalCharacters; i++) {
+                if (text.charAt(i) == characterOccur) {
                     count++;
                 }
             }
+            System.out.println("Character " + characterOccur + " appears " + count + " times.");
 
-            if (count > maxCount) {
-                maxCount = count;
-                mostCommonChar = currentChar;
-            }
-        }
+            // Validate Character Input
+            char ch = getValidCharacter();
 
-        System.out.println("Most common character: '" + mostCommonChar + "' appears " + maxCount + " times.");
-
-        // Prompt user for a character to check its frequency in the text
-        System.out.println("Enter a character to check its frequency:");
-        char searchChar = inputText.next().toLowerCase().charAt(0); // Accept first character only
-        int charFrequency = 0;
-
-        // Count the frequency of the user-specified character
-        for (int i = 0; i < textChars.length; i++) {
-            if (textChars[i] == searchChar) {
-                charFrequency++;
-            }
-        }
-
-        System.out.println("Character '" + searchChar + "' appears " + charFrequency + " times.");
-
-        inputText.nextLine(); // Clear the newline character from the input buffer
-
-        // Prompt user for a word to check its frequency
-        System.out.println("Enter a word to check its frequency:");
-        String searchWord = inputText.nextLine().toLowerCase();
-        int wordFrequency = 0;
-
-        // Count the number of times the specified word appears in the input
-        for (int i = 0; i < words.length; i++) {
-            if (words[i].equalsIgnoreCase(searchWord)) {
-                wordFrequency++;
-            }
-        }
-
-        System.out.println("Word \"" + searchWord + "\" appears " + wordFrequency + " times.");
-
-        // Compute the number of unique words (case insensitive)
-        int uniqueCount = 0;
-        for (int i = 0; i < words.length; i++) {
-            boolean isUnique = true;
-            String currentWord = words[i].toLowerCase();
-
-            // Check if this word has already been counted
-            for (int j = 0; j < i; j++) {
-                if (currentWord.equals(words[j].toLowerCase())) {
-                    isUnique = false;
-                    break;
+            // Character Frequency
+            int charCount = 0;
+            for (int i = 0; i < text.length(); i++) {
+                if (Character.toLowerCase(text.charAt(i)) == ch) {
+                    charCount++;
                 }
             }
+            System.out.println("Character " + ch + " appears " + charCount + " times.");
 
-            if (isUnique) {
-                uniqueCount++;
+            // Validate Word Input
+            String word = getValidWord(inputText);
+
+            // Word Frequency
+            String[] words = text.toLowerCase().split("\\s+");
+            int wordCount = 0;
+            for (String w : words) {
+                if (w.equals(word.toLowerCase())) {
+                    wordCount++;
+                }
+            }
+            System.out.println("Word \"" + word + "\" appears " + wordCount + " times.");
+
+            // Unique Words
+            int unique = 0;
+            for (int i = 0; i < words.length; i++) {
+                boolean found = false;
+                for (int j = 0; j < i; j++) {
+                    if (words[i].equals(words[j])) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    unique++;
+                }
+            }
+            System.out.println("Number of unique words: " + unique);
+
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        }
+    }
+
+    // Method to ensure user enters a valid character using try-catch
+    private static char getValidCharacter() {
+        Scanner inputCharacter = new Scanner(System.in);
+        char ch = '\0';
+        boolean valid = false;
+        while (!valid) {
+            try {
+                System.out.println("Enter a single character:");
+                String input = inputCharacter.nextLine();
+                if (input.length() == 1) {
+                    ch = input.charAt(0);
+                    valid = true;
+                } else {
+                    throw new IllegalArgumentException("Invalid input. Please enter exactly one character.");
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
+        return ch;
+    }
 
-        System.out.println("Number of unique words: " + uniqueCount);
-
-        // Close the Scanner to release resources
-        inputText.close();
+    // Method to ensure user enters a valid word using try-catch
+    private static String getValidWord(Scanner inputText) {
+        String word = "";
+        boolean valid = false;
+        while (!valid) {
+            try {
+                System.out.println("Enter a word:");
+                word = inputText.nextLine().trim();
+                if (!word.isEmpty()) {
+                    valid = true;
+                } else {
+                    throw new IllegalArgumentException("Invalid input. Please enter a valid word.");
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return word;
     }
 }
